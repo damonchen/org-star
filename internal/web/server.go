@@ -3,7 +3,6 @@ package web
 import (
 	"fmt"
 	"github.com/damonchen/org-star/internal/config"
-	"github.com/go-chi/chi"
 	"github.com/op/go-logging"
 	"net/http"
 )
@@ -37,51 +36,9 @@ func (svr *Server) Run() error {
 	return http.ListenAndServe(port, r)
 }
 
-func (svr *Server) Handle(w http.ResponseWriter, req *http.Request) {
-	pvd := chi.URLParam(req, "provider")
-	log.Debugf("svr handle, provider %s", pvd)
-	if pvd == "" {
-		log.Error("provider is empty")
-		w.WriteHeader(500)
-		return
-	}
-
-	return
-}
-
 func (svr *Server) Auth(next http.Handler) http.Handler {
-	auth := svr.Cfg.Auth
-	var isNoneAuth = auth.Type == "none" || auth.Type == ""
-	var isBasicAuth = auth.Type == "basic"
-	log.Debugf("auth type: %s\n", auth.Type)
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		// 判定下是否已经认证通过了
-		if isNoneAuth {
-			next.ServeHTTP(w, req)
-			return
-		}
-
-		if isBasicAuth {
-			name, password, ok := req.BasicAuth()
-			if !ok {
-				log.Error("not supply correct basic auth")
-				w.WriteHeader(500)
-				return
-			}
-
-			if name == auth.BasicAuth.Name && password == auth.BasicAuth.Password {
-				next.ServeHTTP(w, req)
-			} else {
-				log.Debugf("basic name %s and password %s not correct", name, password)
-				w.WriteHeader(401)
-			}
-		}
-
-		// err := proxyAuth(auth.ProxyAuth, w, req)
-		// if err != nil {
-		//	 log.Errorf("proxy auth failed: %s", err)
-		//	 w.WriteHeader(401)
-		// }
+		// TODO: auth
 
 		next.ServeHTTP(w, req)
 		return

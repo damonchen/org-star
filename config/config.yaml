@@ -1,1 +1,15 @@
+host: 127.0.0.1
 port: 8060
+server: http://127.0.0.1:8060
+
+db:
+  name: 'orgstar'
+  host: '127.0.0.1'
+  port: 3306
+  user: 'root'
+  password: 'xxxx'
+  charset: 'utf8mb4'
+
+github:
+  appId: xxx
+  appKey: xxx

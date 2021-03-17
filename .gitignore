@@ -17,3 +17,5 @@
 .idea/
 
 cmd/star/star
+cmd/db/db
+config/config.yaml.example
